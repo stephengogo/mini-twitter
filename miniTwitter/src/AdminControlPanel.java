@@ -1,4 +1,4 @@
-import java.awt.BorderLayout;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -6,12 +6,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.MutableTreeNode;
 import javax.swing.*;
 
 
@@ -72,12 +70,7 @@ public class AdminControlPanel {
         
         //root.add(new DefaultMutableTreeNode("HI"));
         
-        //gbc.fill = GridBagConstraints.HORIZONTAL;
-//        gbc.gridx = 0;
-//        gbc.gridy = 0;
         gbc.insets = new Insets(10,10,10,10);
-//        panel.add(tree, gbc);
- 
         gbc.gridx = 1;
         gbc.gridy = 0;
         panel.add(userIDTextArea, gbc);
@@ -137,25 +130,17 @@ public class AdminControlPanel {
             @Override      
             public void actionPerformed(ActionEvent e) {
                 User newUser = new User(userIDTextArea.getText());
-                //addNodeToSelectedNode(newUser);
                 root.add(new DefaultMutableTreeNode(newUser, false));
                 userGroup.addGroup(newUser);
                 userIDTextArea.setText("");
             }
         });
 		
-		
-//		private void addNodeToSelectedNode(UserGroupComponent newNodeObject){
-//	        UserGroupComponent selectedGroupNode = 
-//	                (UserGroupComponent) this.userGroupTreePane.getLastSelectedPathComponent();
-//	        addNodeToGroupNode(newNodeObject, selectedGroupNode);
-//	    }
         
         this.addGroupButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-//                GroupComposite newGroup = new GroupComposite(groupIDTextArea.getText());
-//                addNodeToSelectedNode(newGroup);
+                UserGroup newGroup = new UserGroup(groupIDTextArea.getText());
                 groupIDTextArea.setText("");
             }
         });

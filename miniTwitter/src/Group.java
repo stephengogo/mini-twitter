@@ -1,4 +1,4 @@
 
-public interface Widget {
+public interface Group {
 	public void render();
 }

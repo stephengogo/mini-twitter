@@ -11,7 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.*;
-
+import javax.swing.tree.DefaultTreeModel;
 
 public class AdminControlPanel {
 	
@@ -46,12 +46,15 @@ public class AdminControlPanel {
 	private UserGroup userGroup;
 	private DefaultMutableTreeNode root; 
 	private JTree tree;
+	private DefaultTreeModel treeModel;
+	private String selectedString;
 	
 	private void startView() {
         JPanel panel = new JPanel();
         layout = new GridBagLayout();
         frame = new JFrame();
-        
+        userGroup = new UserGroup("root");
+        //treeModel = new DefaultTreeModel();
         panel.setLayout(layout);
         gbc = new GridBagConstraints();
         
@@ -65,9 +68,9 @@ public class AdminControlPanel {
         showMessagesTotalButton = new JButton("Show Messages Total");
         showPositivePercentageButton = new JButton("Show Positive Percentage");
         
-        root = new DefaultMutableTreeNode("Root");
+        root = new DefaultMutableTreeNode(userGroup.render());
         tree = new JTree(root);
-        
+        tree.setShowsRootHandles(true);
         //root.add(new DefaultMutableTreeNode("HI"));
         
         gbc.insets = new Insets(10,10,10,10);
@@ -126,17 +129,21 @@ public class AdminControlPanel {
 	}
 	
 	private void listeners() {
+		this.tree.addTreeSelectionListener((TreeSelectionEvent) -> {
+        		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+        		selectedString = (String) selectedNode.getUserObject();
+        		System.out.print(selectedString);
+		});
 		this.addUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
                 User newUser = new User(userIDTextArea.getText());
-                root.add(new DefaultMutableTreeNode(newUser, false));
+                root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
                 userGroup.addGroup(newUser);
                 userIDTextArea.setText("");
             }
         });
 		
-        
         this.addGroupButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
@@ -144,6 +151,7 @@ public class AdminControlPanel {
                 groupIDTextArea.setText("");
             }
         });
+        
 	}
 
 }

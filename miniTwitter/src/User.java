@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.tree.DefaultMutableTreeNode;
+
 public class User implements Group{
 	private String uniqueID;
 	private ArrayList<User> followers;
@@ -44,9 +46,9 @@ public class User implements Group{
 
 
 	@Override
-	public void render() {
-		// TODO Auto-generated method stub
-		
+	public DefaultMutableTreeNode render() {
+		DefaultMutableTreeNode user = new DefaultMutableTreeNode(uniqueID, false);
+		return user;
 	}
 	
 }

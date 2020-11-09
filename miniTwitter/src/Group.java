@@ -1,4 +1,5 @@
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public interface Group {
-	public void render();
+	public DefaultMutableTreeNode render();
 }

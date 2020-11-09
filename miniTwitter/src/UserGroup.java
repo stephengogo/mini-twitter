@@ -48,9 +48,6 @@ public class UserGroup implements Group {
 	@Override
 	public DefaultMutableTreeNode render() {
 		DefaultMutableTreeNode group = new DefaultMutableTreeNode(this.groupID, true);
-//		for(User singleUser: userList) {
-//			group.add(singleUser.render());
-//		}
 		return group;
 	}
 

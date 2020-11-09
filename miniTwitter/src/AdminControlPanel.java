@@ -147,43 +147,54 @@ public class AdminControlPanel {
             	//User newUser = new User(userIDTextArea.getText());
             	if(jTree.getSelectionPath() == null) {
             		User newUser = new User(userIDTextArea.getText());
-            		DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
-            		//userNode.setUserObject(newUser.getUniqueID());
-            		root.add(userNode);
+            		//DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
+            		//root.add(userNode);
+            		
+            		root.add(newUser.render());
                     //root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
                     //userGroup.addGroup(newUser);
                     
             	}
             	else {
             		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
-            		if(selectedElement == root) {
-            			User newUser = new User(userIDTextArea.getText());
-            			//User newUser = new User(userIDTextArea.getText());
-            			root.add(newUser.render());
-                        //root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
-                        //userGroup.addGroup(newUser);
-            		}
-            		else if(selectedElement.getUserObject() instanceof UserGroup) {
+            		if(selectedElement.getAllowsChildren()) {
             			User newUser = new User(userIDTextArea.getText());
             			//selectedElement.add(newUser.render());
-            			DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
-            			selectedElement.add(userNode);
-            			//System.out.println((String) selectedElement.getUserObject() );
-            		}else if(selectedElement.getAllowsChildren()) {
-            			User newUser = new User(userIDTextArea.getText());
-            			//selectedElement.add(newUser.render());
-            			DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
+            			
+            			// trying to change
+            			//DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
+            			
+            			DefaultMutableTreeNode userNode = newUser.render();
+            			
             			selectedElement.add(userNode);
             			//System.out.println((String) selectedElement.getUserObject() );
             		}
+//            		if(selectedElement == root) {
+//            			User newUser = new User(userIDTextArea.getText());
+//            			//User newUser = new User(userIDTextArea.getText());
+//            			root.add(newUser.render());
+//                        //root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
+//                        //userGroup.addGroup(newUser);
+//            		}else if(selectedElement.getAllowsChildren()) {
+//            			User newUser = new User(userIDTextArea.getText());
+//            			//selectedElement.add(newUser.render());
+//            			
+//            			// trying to change
+//            			//DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
+//            			
+//            			DefaultMutableTreeNode userNode = newUser.render();
+//            			
+//            			selectedElement.add(userNode);
+//            			//System.out.println((String) selectedElement.getUserObject() );
+//            		}
             	}
             	
             	userIDTextArea.setText("");
             	defaultTreeModel.reload(root);
-//            	for (int i = 0; i < jTree.getRowCount(); i++) {
-//            		jTree.expandRow(i);
-//            	}
-            	expandAllNodes(jTree, 0, jTree.getRowCount());
+            	for (int i = 0; i < jTree.getRowCount(); i++) {
+            		jTree.expandRow(i);
+            	}
+            	//expandAllNodes(jTree, 0, jTree.getRowCount());
             }
         });
 		
@@ -199,18 +210,28 @@ public class AdminControlPanel {
 //            	}
                 if(jTree.getSelectionPath() == null) {
                 	rootGroup = new UserGroup(groupIDTextArea.getText());
-                	DefaultMutableTreeNode newestGroup = new DefaultMutableTreeNode(rootGroup);
+                	
+                	// trying to use composite pattern 
+                	//DefaultMutableTreeNode newestGroup = new DefaultMutableTreeNode(rootGroup);
+                	DefaultMutableTreeNode newestGroup = rootGroup.render();
                 	//newestGroup.setUserObject(rootGroup.getGroupID());
             		root.add(newestGroup);
-                    
+            	}
+                else {
+            		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
+            		if(selectedElement.getAllowsChildren()) {
+            			rootGroup = new UserGroup(groupIDTextArea.getText());
+            			DefaultMutableTreeNode newestGroup = rootGroup.render();
+            			selectedElement.add(newestGroup);
+            		}
             	}
                 
                 groupIDTextArea.setText("");
                 defaultTreeModel.reload(root);
-                expandAllNodes(jTree, 0, jTree.getRowCount());
-//            	for (int i = 0; i < jTree.getRowCount(); i++) {
-//            		jTree.expandRow(i);
-//            	}
+                //expandAllNodes(jTree, 0, jTree.getRowCount());
+            	for (int i = 0; i < jTree.getRowCount(); i++) {
+            		jTree.expandRow(i);
+            	}
             }
         });
         

@@ -44,11 +44,12 @@ public class AdminControlPanel {
 	private GridBagLayout layout;
 	private GridBagConstraints gbc;
 	
-	private UserGroup userGroup;
 	private UserGroup rootGroup;
 	private DefaultMutableTreeNode root; 
-	private JTree jTree;
 	private DefaultTreeModel defaultTreeModel;
+
+	private JTree jTree = new JTree();
+	
 	private String selectedString;
 	
 	private void startView() {
@@ -56,8 +57,7 @@ public class AdminControlPanel {
         layout = new GridBagLayout();
         frame = new JFrame();
         rootGroup = new UserGroup();
-        userGroup = new UserGroup("root");
-        //treeModel = new DefaultTreeModel();
+        
         panel.setLayout(layout);
         gbc = new GridBagConstraints();
         
@@ -73,8 +73,8 @@ public class AdminControlPanel {
         
         root = new DefaultMutableTreeNode(rootGroup.getRoot());
         defaultTreeModel = new DefaultTreeModel(root);
-        
-        jTree = new JTree(defaultTreeModel);
+        jTree.setModel(defaultTreeModel);
+        //jTree = new JTree(defaultTreeModel);
         jTree.setCellRenderer(new DefaultTreeCellRenderer());
         System.out.println(jTree.getSelectionPath());
         //jTree.setShowsRootHandles(true);
@@ -144,37 +144,73 @@ public class AdminControlPanel {
 		this.addUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	
+            	//User newUser = new User(userIDTextArea.getText());
             	if(jTree.getSelectionPath() == null) {
             		User newUser = new User(userIDTextArea.getText());
-            		root.add(newUser.render());
+            		DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
+            		//userNode.setUserObject(newUser.getUniqueID());
+            		root.add(userNode);
                     //root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
                     //userGroup.addGroup(newUser);
-                    userIDTextArea.setText("");
+                    
             	}
             	else {
             		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
             		if(selectedElement == root) {
             			User newUser = new User(userIDTextArea.getText());
+            			//User newUser = new User(userIDTextArea.getText());
             			root.add(newUser.render());
                         //root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
                         //userGroup.addGroup(newUser);
-                        userIDTextArea.setText("");
+            		}
+            		else if(selectedElement.getUserObject() instanceof UserGroup) {
+            			User newUser = new User(userIDTextArea.getText());
+            			//selectedElement.add(newUser.render());
+            			DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
+            			selectedElement.add(userNode);
+            			//System.out.println((String) selectedElement.getUserObject() );
+            		}else if(selectedElement.getAllowsChildren()) {
+            			User newUser = new User(userIDTextArea.getText());
+            			//selectedElement.add(newUser.render());
+            			DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
+            			selectedElement.add(userNode);
+            			//System.out.println((String) selectedElement.getUserObject() );
             		}
             	}
+            	
+            	userIDTextArea.setText("");
             	defaultTreeModel.reload(root);
-            	for (int i = 0; i < jTree.getRowCount(); i++) {
-            		jTree.expandRow(i);
-            	}
-            	//expandAllNodes(jTree, 0, jTree.getRowCount());
+//            	for (int i = 0; i < jTree.getRowCount(); i++) {
+//            		jTree.expandRow(i);
+//            	}
+            	expandAllNodes(jTree, 0, jTree.getRowCount());
             }
         });
 		
         this.addGroupButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-                UserGroup newGroup = new UserGroup(groupIDTextArea.getText());
+                //UserGroup newGroup = new UserGroup(groupIDTextArea.getText());
+                //DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
+//                if(selectedElement.getAllowsChildren()) {
+//                	
+//                	System.out.println((String) selectedElement.getUserObject() );
+//                	groupIDTextArea.setText("");
+//            	}
+                if(jTree.getSelectionPath() == null) {
+                	rootGroup = new UserGroup(groupIDTextArea.getText());
+                	DefaultMutableTreeNode newestGroup = new DefaultMutableTreeNode(rootGroup);
+                	//newestGroup.setUserObject(rootGroup.getGroupID());
+            		root.add(newestGroup);
+                    
+            	}
+                
                 groupIDTextArea.setText("");
+                defaultTreeModel.reload(root);
+                expandAllNodes(jTree, 0, jTree.getRowCount());
+//            	for (int i = 0; i < jTree.getRowCount(); i++) {
+//            		jTree.expandRow(i);
+//            	}
             }
         });
         

@@ -136,17 +136,19 @@ public class AdminControlPanel {
 	}
 	
 	private void listeners() {
-		this.jTree.addTreeSelectionListener((TreeSelectionEvent) -> {
-        		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
-        		selectedString = (String) selectedNode.getUserObject();
-        		System.out.print(selectedString);
-		});
+//		this.jTree.addTreeSelectionListener((TreeSelectionEvent) -> {
+//        		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
+//        		selectedString = (String) selectedNode.getUserObject();
+//        		System.out.print(selectedString);
+//		});
 		this.addUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
+            	
             	if(jTree.getSelectionPath() == null) {
             		User newUser = new User(userIDTextArea.getText());
-                    root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
+            		root.add(newUser.render());
+                    //root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
                     //userGroup.addGroup(newUser);
                     userIDTextArea.setText("");
             	}
@@ -154,12 +156,17 @@ public class AdminControlPanel {
             		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
             		if(selectedElement == root) {
             			User newUser = new User(userIDTextArea.getText());
-                        root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
+            			root.add(newUser.render());
+                        //root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
                         //userGroup.addGroup(newUser);
                         userIDTextArea.setText("");
             		}
             	}
             	defaultTreeModel.reload(root);
+            	for (int i = 0; i < jTree.getRowCount(); i++) {
+            		jTree.expandRow(i);
+            	}
+            	//expandAllNodes(jTree, 0, jTree.getRowCount());
             }
         });
 		
@@ -171,6 +178,16 @@ public class AdminControlPanel {
             }
         });
         
+	}
+	// method to expand all the descendant nodes using recursive method 
+	private void expandAllNodes(JTree tree, int startingIndex, int rowCount){
+	    for(int i = startingIndex; i < rowCount; ++i){
+	        tree.expandRow(i);
+	    }
+
+	    if(tree.getRowCount() != rowCount){
+	        expandAllNodes(tree, rowCount, tree.getRowCount());
+	    }
 	}
 
 }

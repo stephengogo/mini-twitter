@@ -47,7 +47,7 @@ public class User implements Group{
 
 	@Override
 	public DefaultMutableTreeNode render() {
-		DefaultMutableTreeNode user = new DefaultMutableTreeNode(uniqueID, false);
+		DefaultMutableTreeNode user = new DefaultMutableTreeNode(this.uniqueID, false);
 		return user;
 	}
 	

@@ -10,9 +10,11 @@ public class UserGroup implements Group {
 	private List<User> userList = new ArrayList<User>();
 	private static DefaultMutableTreeNode root;
 	
+	public UserGroup() {
+		root = new DefaultMutableTreeNode("Root");
+	}
 	public UserGroup(String groupID) {
 		this.groupID = groupID;
-		root = new DefaultMutableTreeNode("Root");
 	}
 	
 	public static DefaultMutableTreeNode getRoot() {

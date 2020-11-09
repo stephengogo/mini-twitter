@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
@@ -44,15 +45,17 @@ public class AdminControlPanel {
 	private GridBagConstraints gbc;
 	
 	private UserGroup userGroup;
+	private UserGroup rootGroup;
 	private DefaultMutableTreeNode root; 
-	private JTree tree;
-	private DefaultTreeModel treeModel;
+	private JTree jTree;
+	private DefaultTreeModel defaultTreeModel;
 	private String selectedString;
 	
 	private void startView() {
         JPanel panel = new JPanel();
         layout = new GridBagLayout();
         frame = new JFrame();
+        rootGroup = new UserGroup();
         userGroup = new UserGroup("root");
         //treeModel = new DefaultTreeModel();
         panel.setLayout(layout);
@@ -68,9 +71,13 @@ public class AdminControlPanel {
         showMessagesTotalButton = new JButton("Show Messages Total");
         showPositivePercentageButton = new JButton("Show Positive Percentage");
         
-        root = new DefaultMutableTreeNode(userGroup.render());
-        tree = new JTree(root);
-        tree.setShowsRootHandles(true);
+        root = new DefaultMutableTreeNode(rootGroup.getRoot());
+        defaultTreeModel = new DefaultTreeModel(root);
+        
+        jTree = new JTree(defaultTreeModel);
+        jTree.setCellRenderer(new DefaultTreeCellRenderer());
+        System.out.println(jTree.getSelectionPath());
+        //jTree.setShowsRootHandles(true);
         //root.add(new DefaultMutableTreeNode("HI"));
         
         gbc.insets = new Insets(10,10,10,10);
@@ -117,7 +124,7 @@ public class AdminControlPanel {
         panel.add(showPositivePercentageButton, gbc);
         
         JPanel mainPanel = new JPanel(new GridLayout(0,2));
-        mainPanel.add(tree);
+        mainPanel.add(jTree);
         mainPanel.add(panel);
         
         frame.setSize(500, 500);
@@ -129,18 +136,30 @@ public class AdminControlPanel {
 	}
 	
 	private void listeners() {
-		this.tree.addTreeSelectionListener((TreeSelectionEvent) -> {
-        		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		this.jTree.addTreeSelectionListener((TreeSelectionEvent) -> {
+        		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
         		selectedString = (String) selectedNode.getUserObject();
         		System.out.print(selectedString);
 		});
 		this.addUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-                User newUser = new User(userIDTextArea.getText());
-                root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
-                userGroup.addGroup(newUser);
-                userIDTextArea.setText("");
+            	if(jTree.getSelectionPath() == null) {
+            		User newUser = new User(userIDTextArea.getText());
+                    root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
+                    //userGroup.addGroup(newUser);
+                    userIDTextArea.setText("");
+            	}
+            	else {
+            		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
+            		if(selectedElement == root) {
+            			User newUser = new User(userIDTextArea.getText());
+                        root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
+                        //userGroup.addGroup(newUser);
+                        userIDTextArea.setText("");
+            		}
+            	}
+            	defaultTreeModel.reload(root);
             }
         });
 		

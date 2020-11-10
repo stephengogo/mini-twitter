@@ -14,6 +14,9 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 
+import javax.swing.JScrollPane;  
+
+
 public class AdminControlPanel {
 	
 	private static AdminControlPanel instance; 
@@ -47,19 +50,21 @@ public class AdminControlPanel {
 	private UserGroup rootGroup;
 	private DefaultMutableTreeNode root; 
 	private DefaultTreeModel defaultTreeModel;
+	private JTree jTree;
 
-	private JTree jTree = new JTree();
-	
-	private String selectedString;
-	
 	private void startView() {
         JPanel panel = new JPanel();
         layout = new GridBagLayout();
-        frame = new JFrame();
-        rootGroup = new UserGroup();
-        
         panel.setLayout(layout);
-        gbc = new GridBagConstraints();
+        frame = new JFrame();
+        
+        rootGroup = new UserGroup();
+        root = new DefaultMutableTreeNode(rootGroup.getRoot());
+        defaultTreeModel = new DefaultTreeModel(root);
+        
+        jTree = new JTree();
+        jTree.setModel(defaultTreeModel);
+        jTree.setCellRenderer(new DefaultTreeCellRenderer());
         
         userIDTextArea = new JTextArea(2,17);
         addUserButton = new JButton("Add User");
@@ -71,15 +76,7 @@ public class AdminControlPanel {
         showMessagesTotalButton = new JButton("Show Messages Total");
         showPositivePercentageButton = new JButton("Show Positive Percentage");
         
-        root = new DefaultMutableTreeNode(rootGroup.getRoot());
-        defaultTreeModel = new DefaultTreeModel(root);
-        jTree.setModel(defaultTreeModel);
-        //jTree = new JTree(defaultTreeModel);
-        jTree.setCellRenderer(new DefaultTreeCellRenderer());
-        System.out.println(jTree.getSelectionPath());
-        //jTree.setShowsRootHandles(true);
-        //root.add(new DefaultMutableTreeNode("HI"));
-        
+        gbc = new GridBagConstraints();
         gbc.insets = new Insets(10,10,10,10);
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -124,69 +121,34 @@ public class AdminControlPanel {
         panel.add(showPositivePercentageButton, gbc);
         
         JPanel mainPanel = new JPanel(new GridLayout(0,2));
-        mainPanel.add(jTree);
+        JScrollPane jScrollTreePane = new JScrollPane(jTree);
+        mainPanel.add(jScrollTreePane);
         mainPanel.add(panel);
         
-        frame.setSize(500, 500);
         frame.add(mainPanel);
+        frame.setSize(900, 300);
+        //frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Admin Panel");
-        frame.pack();
+        
         frame.setVisible(true);
 	}
 	
 	private void listeners() {
-//		this.jTree.addTreeSelectionListener((TreeSelectionEvent) -> {
-//        		DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) jTree.getLastSelectedPathComponent();
-//        		selectedString = (String) selectedNode.getUserObject();
-//        		System.out.print(selectedString);
-//		});
 		this.addUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	//User newUser = new User(userIDTextArea.getText());
             	if(jTree.getSelectionPath() == null) {
             		User newUser = new User(userIDTextArea.getText());
-            		//DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
-            		//root.add(userNode);
-            		
             		root.add(newUser.render());
-                    //root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
-                    //userGroup.addGroup(newUser);
-                    
             	}
             	else {
             		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
             		if(selectedElement.getAllowsChildren()) {
             			User newUser = new User(userIDTextArea.getText());
-            			//selectedElement.add(newUser.render());
-            			
-            			// trying to change
-            			//DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
-            			
             			DefaultMutableTreeNode userNode = newUser.render();
-            			
             			selectedElement.add(userNode);
-            			//System.out.println((String) selectedElement.getUserObject() );
             		}
-//            		if(selectedElement == root) {
-//            			User newUser = new User(userIDTextArea.getText());
-//            			//User newUser = new User(userIDTextArea.getText());
-//            			root.add(newUser.render());
-//                        //root.add(new DefaultMutableTreeNode(newUser.getUniqueID(), false));
-//                        //userGroup.addGroup(newUser);
-//            		}else if(selectedElement.getAllowsChildren()) {
-//            			User newUser = new User(userIDTextArea.getText());
-//            			//selectedElement.add(newUser.render());
-//            			
-//            			// trying to change
-//            			//DefaultMutableTreeNode userNode = new DefaultMutableTreeNode(newUser, false);
-//            			
-//            			DefaultMutableTreeNode userNode = newUser.render();
-//            			
-//            			selectedElement.add(userNode);
-//            			//System.out.println((String) selectedElement.getUserObject() );
-//            		}
             	}
             	
             	userIDTextArea.setText("");
@@ -194,27 +156,15 @@ public class AdminControlPanel {
             	for (int i = 0; i < jTree.getRowCount(); i++) {
             		jTree.expandRow(i);
             	}
-            	//expandAllNodes(jTree, 0, jTree.getRowCount());
             }
         });
 		
         this.addGroupButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-                //UserGroup newGroup = new UserGroup(groupIDTextArea.getText());
-                //DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
-//                if(selectedElement.getAllowsChildren()) {
-//                	
-//                	System.out.println((String) selectedElement.getUserObject() );
-//                	groupIDTextArea.setText("");
-//            	}
                 if(jTree.getSelectionPath() == null) {
                 	rootGroup = new UserGroup(groupIDTextArea.getText());
-                	
-                	// trying to use composite pattern 
-                	//DefaultMutableTreeNode newestGroup = new DefaultMutableTreeNode(rootGroup);
                 	DefaultMutableTreeNode newestGroup = rootGroup.render();
-                	//newestGroup.setUserObject(rootGroup.getGroupID());
             		root.add(newestGroup);
             	}
                 else {
@@ -228,23 +178,51 @@ public class AdminControlPanel {
                 
                 groupIDTextArea.setText("");
                 defaultTreeModel.reload(root);
-                //expandAllNodes(jTree, 0, jTree.getRowCount());
             	for (int i = 0; i < jTree.getRowCount(); i++) {
             		jTree.expandRow(i);
             	}
             }
         });
         
-	}
-	// method to expand all the descendant nodes using recursive method 
-	private void expandAllNodes(JTree tree, int startingIndex, int rowCount){
-	    for(int i = startingIndex; i < rowCount; ++i){
-	        tree.expandRow(i);
-	    }
-
-	    if(tree.getRowCount() != rowCount){
-	        expandAllNodes(tree, rowCount, tree.getRowCount());
-	    }
+        this.openUserViewButton.addActionListener(new ActionListener() {  
+            @Override      
+            public void actionPerformed(ActionEvent e) {
+            	DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
+            	if(!selectedElement.getAllowsChildren()) {
+            		
+            		System.out.println(selectedElement.getUserObject().getClass().getClass());
+        		}
+            }
+        });
+    	
+        this.showUserTotalButton.addActionListener(new ActionListener() {  
+            @Override      
+            public void actionPerformed(ActionEvent e) {
+            	
+            }
+        });
+        
+        this.showGroupTotalButton.addActionListener(new ActionListener() {  
+            @Override      
+            public void actionPerformed(ActionEvent e) {
+            	
+            }
+        });
+        
+        this.showMessagesTotalButton.addActionListener(new ActionListener() {  
+            @Override      
+            public void actionPerformed(ActionEvent e) {
+            	
+            }
+        });
+        
+        this.showPositivePercentageButton.addActionListener(new ActionListener() {  
+            @Override      
+            public void actionPerformed(ActionEvent e) {
+            	
+            }
+        });
+        
 	}
 
 }

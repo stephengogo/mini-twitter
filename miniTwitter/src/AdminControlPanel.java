@@ -5,7 +5,6 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -13,9 +12,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
-
 import javax.swing.JScrollPane;  
-
+import java.util.ArrayList;
 
 public class AdminControlPanel {
 	
@@ -51,7 +49,9 @@ public class AdminControlPanel {
 	private DefaultMutableTreeNode root; 
 	private DefaultTreeModel defaultTreeModel;
 	private JTree jTree;
-
+	
+	private ArrayList<String> containStringList;
+	
 	private void startView() {
         JPanel panel = new JPanel();
         layout = new GridBagLayout();
@@ -75,6 +75,7 @@ public class AdminControlPanel {
         showGroupTotalButton = new JButton("Show GroupTotal");
         showMessagesTotalButton = new JButton("Show Messages Total");
         showPositivePercentageButton = new JButton("Show Positive Percentage");
+        containStringList = new ArrayList<String>();
         
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10,10,10,10);
@@ -135,20 +136,30 @@ public class AdminControlPanel {
 	}
 	
 	private void listeners() {
+		// adds user : if none is selected or if is group then adds user 
 		this.addUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	if(jTree.getSelectionPath() == null) {
+            	
+            	if(!containStringList.contains(userIDTextArea.getText()) && (userIDTextArea.getText().length() != 0) ) {
             		User newUser = new User(userIDTextArea.getText());
-            		root.add(newUser.render());
-            	}
-            	else {
-            		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
-            		if(selectedElement.getAllowsChildren()) {
-            			User newUser = new User(userIDTextArea.getText());
-            			DefaultMutableTreeNode userNode = newUser.render();
-            			selectedElement.add(userNode);
-            		}
+            		containStringList.add(userIDTextArea.getText());
+            		
+                	if(jTree.getSelectionPath() == null) {
+                		root.add(newUser.render());
+                	}
+                	else {
+                		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
+                		if(selectedElement.getAllowsChildren()) {
+                			DefaultMutableTreeNode userNode = newUser.render();
+                			selectedElement.add(userNode);
+                		}
+                	}
+            	} else {
+            		JOptionPane.showMessageDialog(frame,
+            			    "User can't be same nor the length of 0\nPlease add to a group.",
+            			    "Error message",
+            			    JOptionPane.PLAIN_MESSAGE);
             	}
             	
             	userIDTextArea.setText("");
@@ -187,10 +198,11 @@ public class AdminControlPanel {
         this.openUserViewButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
+            	// selected element is of type string and not user
             	DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
             	if(!selectedElement.getAllowsChildren()) {
-            		
-            		System.out.println(selectedElement.getUserObject().getClass().getClass());
+            		System.out.println(selectedElement);
+                	//UserViewUI test = new UserViewUI();
         		}
             }
         });

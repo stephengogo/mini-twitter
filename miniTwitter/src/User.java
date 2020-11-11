@@ -3,18 +3,19 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class User implements Group{
+public class User extends Subject implements Group {
 	private String uniqueID;
-	private ArrayList<User> followers;
-	private ArrayList<User> followings;
+	private List<String> followers;
+	private List<String> followings;
+	private List<String> newsFeed;
 	
 	public User(String uniqueID) {
 		this.uniqueID = uniqueID;
-		this.followers = new ArrayList<User>();
-		this.followings = new ArrayList<User>();
+		this.followers = new ArrayList<String>();
+		this.followings = new ArrayList<String>();
+		this.newsFeed = new ArrayList<String>();
 	}
 	
-
 	public String getUniqueID() {
 		return uniqueID;
 	}
@@ -25,23 +26,33 @@ public class User implements Group{
 	}
 
 
-	public ArrayList<User> getFollowers() {
+	public List<String> getFollowers() {
 		return followers;
 	}
 
 
-	public void setFollowers(ArrayList<User> followers) {
+	public void setFollowers(List<String> followers) {
 		this.followers = followers;
 	}
 
 
-	public ArrayList<User> getFollowings() {
+	public List<String> getFollowings() {
 		return followings;
 	}
 
 
-	public void setFollowings(ArrayList<User> followings) {
+	public void setFollowings(List<String> followings) {
 		this.followings = followings;
+	}
+
+
+	public List<String> getNewsFeed() {
+		return newsFeed;
+	}
+
+
+	public void setNewsFeed(List<String> newsFeed) {
+		this.newsFeed = newsFeed;
 	}
 
 

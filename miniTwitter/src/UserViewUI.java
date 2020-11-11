@@ -3,7 +3,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,11 +30,21 @@ public class UserViewUI implements Observer {
 	private JList currentFollowingListView;
 	private JList newsFeedListView;
 	
+	private ArrayList<String> containStringList;
+	
 //	public UserViewUI() {
 //		initUI();
 //		listeners();
 //	}
 	
+	public ArrayList<String> getContainStringList() {
+		return containStringList;
+	}
+
+	public void setContainStringList(ArrayList<String> containStringList) {
+		this.containStringList = containStringList;
+	}
+
 	public UserViewUI(User user) {
 		currentUser = user;
 		initUI();
@@ -40,6 +52,7 @@ public class UserViewUI implements Observer {
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void initUI() {
 		JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
@@ -50,10 +63,12 @@ public class UserViewUI implements Observer {
         followUserButton = new JButton("Follow User");
         postTweetButton = new JButton("Post Tweet");
         currentFollowingListView = new JList(this.currentUser.getFollowers().toArray());
-        followersScrollPane = new JScrollPane(currentFollowingListView);
+        followersScrollPane = new JScrollPane();
+        followersScrollPane.setViewportView(currentFollowingListView);
+        
         newsFeedListView = new JList(this.currentUser.getNewsFeed().toArray());
         tweetScrollPane = new JScrollPane(newsFeedListView);
-        
+        //tweetScrollPane.setViewportView(newsFeedListView);
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -86,7 +101,7 @@ public class UserViewUI implements Observer {
         panel.add(tweetScrollPane, gbc);
         
         frame.add(panel);
-        frame.pack();
+        frame.setSize(500, 500);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setTitle(currentUser.getUniqueID() + "'s view");
         frame.setVisible(true);
@@ -96,7 +111,24 @@ public class UserViewUI implements Observer {
 		this.followUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	
+            	System.out.print(containStringList.get(0));
+            	if(containStringList.contains(userTextArea.getText())) {
+            		currentUser.addFollowers(userTextArea.getText());
+            		DefaultListModel<String> model = new DefaultListModel<String>();
+            		for(int i = 0; i < currentUser.getFollowers().size(); i++) {
+            			model.addElement(currentUser.getFollowers().get(i));
+            			System.out.print(currentUser.getFollowers().get(i));
+            		}
+            		//model.addElement(userTextArea.getText());
+            		currentFollowingListView.setModel(model);
+            		userTextArea.setText("");
+            		
+            		followersScrollPane.revalidate();
+            		followersScrollPane.repaint();
+            		
+            		//frame.revalidate();
+                    //frame.repaint();
+                }
             }
         });
 	}

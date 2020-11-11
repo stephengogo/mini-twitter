@@ -146,11 +146,12 @@ public class AdminControlPanel {
             public void actionPerformed(ActionEvent e) {
             	if(!containStringList.contains(userIDTextArea.getText()) && (userIDTextArea.getText().length() != 0) ) {
             		User newUser = new User(userIDTextArea.getText());
-            		containStringList.add(userIDTextArea.getText());
+            		
             		
                 	if(jTree.getSelectionPath() == null) {
                 		root.add(newUser.render());
                 		//UserViewUI newUserUI = new UserViewUI(newUser, false);
+                		containStringList.add(userIDTextArea.getText());
                 		userHashMap.put(userIDTextArea.getText(), newUser);
                 	}
                 	else {
@@ -159,6 +160,7 @@ public class AdminControlPanel {
                 			DefaultMutableTreeNode userNode = newUser.render();
                 			selectedElement.add(userNode);
                 			//UserViewUI newUserUI = new UserViewUI(newUser, false);
+                			containStringList.add(userIDTextArea.getText());
                 			userHashMap.put(userIDTextArea.getText(), newUser);
                 		} else {
                 			JOptionPane.showMessageDialog(frame,
@@ -225,7 +227,8 @@ public class AdminControlPanel {
             		System.out.println(selectedElement);
             		System.out.println(userHashMap.containsKey(selectedElement.toString()));
             		UserViewUI test = new UserViewUI(userHashMap.get(selectedElement.toString()));
-            		
+            		test.setContainStringList(containStringList);
+            		System.out.println("test");
                 	//UserViewUI test = new UserViewUI();
         		}
             }

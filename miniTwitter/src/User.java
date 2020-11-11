@@ -44,6 +44,10 @@ public class User extends Subject implements Group {
 	public void setFollowings(List<String> followings) {
 		this.followings = followings;
 	}
+	
+	public void addFollowers(String follower) {
+		this.followers.add(follower);
+	}
 
 
 	public List<String> getNewsFeed() {

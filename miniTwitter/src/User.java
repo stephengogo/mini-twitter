@@ -58,10 +58,10 @@ public class User extends Subject implements Group {
 
 	@Override
 	public DefaultMutableTreeNode render() {
-		
 		DefaultMutableTreeNode user = new DefaultMutableTreeNode(this, false);
 		user.setUserObject(this.getUniqueID());
 		return user;
 	}
+
 	
 }

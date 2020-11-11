@@ -1,5 +1,6 @@
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,19 +27,22 @@ public class UserViewUI implements Observer {
 	private User currentUser;
 	private JList currentFollowingListView;
 	private JList newsFeedListView;
-	public UserViewUI() {
-		initUI();
-		listeners();
-	}
+	
+//	public UserViewUI() {
+//		initUI();
+//		listeners();
+//	}
 	
 	public UserViewUI(User user) {
 		currentUser = user;
+		initUI();
+		listeners();
+		
 	}
 	
 	private void initUI() {
 		JPanel panel = new JPanel();
-        layout = new GridBagLayout();
-        panel.setLayout(layout);
+        panel.setLayout(new GridBagLayout());
         frame = new JFrame();
         
         userTextArea = new JTextArea(2,17);
@@ -47,9 +51,12 @@ public class UserViewUI implements Observer {
         postTweetButton = new JButton("Post Tweet");
         currentFollowingListView = new JList(this.currentUser.getFollowers().toArray());
         followersScrollPane = new JScrollPane(currentFollowingListView);
-        tweetScrollPane = new JScrollPane();
+        newsFeedListView = new JList(this.currentUser.getNewsFeed().toArray());
+        tweetScrollPane = new JScrollPane(newsFeedListView);
         
         gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
         panel.add(userTextArea, gbc);
@@ -59,31 +66,29 @@ public class UserViewUI implements Observer {
         panel.add(followUserButton, gbc);
         
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 1;
         gbc.gridwidth = 2;
-        gbc.weightx = 1;
-        gbc.weighty = 1;
-        gbc.fill = GridBagConstraints.BOTH;
+        //followersScrollPane.setPreferredSize();
         panel.add(followersScrollPane, gbc);
         
+        gbc.gridwidth = 1;
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         panel.add(tweetTextArea, gbc);
         
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         panel.add(postTweetButton, gbc);
         
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
         panel.add(tweetScrollPane, gbc);
         
         frame.add(panel);
         frame.pack();
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setTitle("Panel");
-        
+        frame.setTitle(currentUser.getUniqueID() + "'s view");
         frame.setVisible(true);
 	}
 	
@@ -99,6 +104,6 @@ public class UserViewUI implements Observer {
 	@Override
 	public void update(Subject subject) {
 		// TODO Auto-generated method stub
-		
+		followersScrollPane.repaint();
 	}
 }

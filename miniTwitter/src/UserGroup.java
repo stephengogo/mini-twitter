@@ -43,7 +43,6 @@ public class UserGroup implements Group {
 	public void setUserList(List<User> userList) {
 		this.userList = userList;
 	}
-	
 
 	@Override
 	public DefaultMutableTreeNode render() {

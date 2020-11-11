@@ -14,6 +14,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.JScrollPane;  
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AdminControlPanel {
 	
@@ -51,6 +52,7 @@ public class AdminControlPanel {
 	private JTree jTree;
 	
 	private ArrayList<String> containStringList;
+	private HashMap<String, User> userHashMap;
 	
 	private void startView() {
         JPanel panel = new JPanel();
@@ -75,7 +77,9 @@ public class AdminControlPanel {
         showGroupTotalButton = new JButton("Show GroupTotal");
         showMessagesTotalButton = new JButton("Show Messages Total");
         showPositivePercentageButton = new JButton("Show Positive Percentage");
+        
         containStringList = new ArrayList<String>();
+        userHashMap = new HashMap<String, User>();
         
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10,10,10,10);
@@ -140,19 +144,27 @@ public class AdminControlPanel {
 		this.addUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	
             	if(!containStringList.contains(userIDTextArea.getText()) && (userIDTextArea.getText().length() != 0) ) {
             		User newUser = new User(userIDTextArea.getText());
             		containStringList.add(userIDTextArea.getText());
             		
                 	if(jTree.getSelectionPath() == null) {
                 		root.add(newUser.render());
+                		//UserViewUI newUserUI = new UserViewUI(newUser, false);
+                		userHashMap.put(userIDTextArea.getText(), newUser);
                 	}
                 	else {
                 		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
                 		if(selectedElement.getAllowsChildren()) {
                 			DefaultMutableTreeNode userNode = newUser.render();
                 			selectedElement.add(userNode);
+                			//UserViewUI newUserUI = new UserViewUI(newUser, false);
+                			userHashMap.put(userIDTextArea.getText(), newUser);
+                		} else {
+                			JOptionPane.showMessageDialog(frame,
+                    			    "Group must be selected",
+                    			    "Error message",
+                    			    JOptionPane.PLAIN_MESSAGE);
                 		}
                 	}
             	} else {
@@ -173,19 +185,27 @@ public class AdminControlPanel {
         this.addGroupButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-                if(jTree.getSelectionPath() == null) {
-                	rootGroup = new UserGroup(groupIDTextArea.getText());
-                	DefaultMutableTreeNode newestGroup = rootGroup.render();
-            		root.add(newestGroup);
+            	if(groupIDTextArea.getText().length() != 0) {
+            		if(jTree.getSelectionPath() == null) {
+                    	rootGroup = new UserGroup(groupIDTextArea.getText());
+                    	DefaultMutableTreeNode newestGroup = rootGroup.render();
+                		root.add(newestGroup);
+                	}
+                    else {
+                		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
+                		if(selectedElement.getAllowsChildren()) {
+                			rootGroup = new UserGroup(groupIDTextArea.getText());
+                			DefaultMutableTreeNode newestGroup = rootGroup.render();
+                			selectedElement.add(newestGroup);
+                		}
+                	}
+            	} else {
+            		JOptionPane.showMessageDialog(frame,
+            			    "Group can't be Null.",
+            			    "Error message",
+            			    JOptionPane.PLAIN_MESSAGE);
             	}
-                else {
-            		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
-            		if(selectedElement.getAllowsChildren()) {
-            			rootGroup = new UserGroup(groupIDTextArea.getText());
-            			DefaultMutableTreeNode newestGroup = rootGroup.render();
-            			selectedElement.add(newestGroup);
-            		}
-            	}
+                
                 
                 groupIDTextArea.setText("");
                 defaultTreeModel.reload(root);
@@ -201,7 +221,11 @@ public class AdminControlPanel {
             	// selected element is of type string and not user
             	DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
             	if(!selectedElement.getAllowsChildren()) {
+            		
             		System.out.println(selectedElement);
+            		System.out.println(userHashMap.containsKey(selectedElement.toString()));
+            		UserViewUI test = new UserViewUI(userHashMap.get(selectedElement.toString()));
+            		
                 	//UserViewUI test = new UserViewUI();
         		}
             }

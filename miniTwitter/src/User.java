@@ -3,12 +3,15 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class User extends Subject implements Group {
+public class User extends Subject implements Group, UserElement  {
 	private String uniqueID;
 	private List<String> followers;
 	private List<String> followings;
 	private List<String> newsFeed;
 	
+	public User() {
+		
+	}
 	public User(String uniqueID) {
 		this.uniqueID = uniqueID;
 		this.followers = new ArrayList<String>();
@@ -57,6 +60,10 @@ public class User extends Subject implements Group {
 		this.newsFeed = newsFeed;
 	}
 
+	public int getUserCount() {
+		return 1;
+	}
+	
 	// override Group interface method
 	@Override
 	public DefaultMutableTreeNode render() {
@@ -64,6 +71,15 @@ public class User extends Subject implements Group {
 		user.setUserObject(this.getUniqueID());
 		return user;
 	}
+
+	
+	
+	@Override
+	public void accept(UserElementVisitor userElementVisitor) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 
 	
 }

@@ -4,14 +4,12 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.*;
 import javax.swing.tree.DefaultTreeModel;
-import javax.swing.JScrollPane;  
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -43,14 +41,14 @@ public class AdminControlPanel {
 	private JTextArea groupIDTextArea;
 	private GridBagLayout layout;
 	private GridBagConstraints gbc;
-	
 	private UserGroup rootGroup;
 	private DefaultMutableTreeNode root; 
 	private DefaultTreeModel defaultTreeModel;
 	private JTree jTree;
-	
 	private ArrayList<String> containStringList;
 	private HashMap<String, User> userHashMap;
+	private UserVisitor userVisitor;
+	private Integer groupSize;
 	
 	private void startView() {
         JPanel panel = new JPanel();
@@ -78,7 +76,9 @@ public class AdminControlPanel {
         
         containStringList = new ArrayList<String>();
         userHashMap = new HashMap<String, User>();
-        
+        userVisitor = new UserVisitor();
+        groupSize = 0;
+        		
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10,10,10,10);
         gbc.gridx = 1;
@@ -132,7 +132,6 @@ public class AdminControlPanel {
         frame.setSize(900, 300);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Admin Panel");
-        
         frame.setVisible(true);
 	}
 	
@@ -188,6 +187,7 @@ public class AdminControlPanel {
                     	rootGroup = new UserGroup(groupIDTextArea.getText());
                     	DefaultMutableTreeNode newestGroup = rootGroup.render();
                 		root.add(newestGroup);
+                		groupSize++;
                 	}
                     else {
                 		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
@@ -195,6 +195,7 @@ public class AdminControlPanel {
                 			rootGroup = new UserGroup(groupIDTextArea.getText());
                 			DefaultMutableTreeNode newestGroup = rootGroup.render();
                 			selectedElement.add(newestGroup);
+                			groupSize++;
                 		}
                 	}
             	} else {
@@ -228,14 +229,22 @@ public class AdminControlPanel {
         this.showUserTotalButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	
+            	userVisitor.setVisitorTotal(userHashMap.size());
+            	JOptionPane.showMessageDialog(frame,
+            			userVisitor.visitUserTotal() + " User Total",
+        			    "UserTotal",
+        			    JOptionPane.PLAIN_MESSAGE);
             }
         });
         
         this.showGroupTotalButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	
+            	userVisitor.setGroupTotal(groupSize);
+            	JOptionPane.showMessageDialog(frame,
+            			userVisitor.visitGroupTotal() + " Group Total",
+        			    "GroupTotal",
+        			    JOptionPane.PLAIN_MESSAGE);
             }
         });
         

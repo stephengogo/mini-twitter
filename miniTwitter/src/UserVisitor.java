@@ -1,9 +1,11 @@
-import javax.swing.JOptionPane;
+import java.util.ArrayList;
 
 public class UserVisitor implements UserElementVisitor {
 
 	private int userTotal = 0;
 	private int groupTotal = 0;
+	private int messageTotal;
+	private double positiveMessage;
 	
 	@Override
 	public int visitUserTotal() {
@@ -23,17 +25,29 @@ public class UserVisitor implements UserElementVisitor {
 	public void setGroupTotal(int groupTotal) {
 		this.groupTotal = groupTotal;
 	}
-
+	
 	@Override
-	public void visitMessagesTotal(User user) {
-		// TODO Auto-generated method stub
+	public int visitMessagesTotal(ArrayList<User> user) {
+		messageTotal = 0;
 		
+		for(int i = 0; i < user.size(); i++) {
+			messageTotal += user.get(i).getMessageCount();
+		}
+		
+		return messageTotal;
 	}
 
 	@Override
-	public void visitPositivePercentage(User user) {
-		// TODO Auto-generated method stub
-		
+	public double visitPositivePercentage(ArrayList<User> user) {
+		positiveMessage = 0.0;
+		int messages = 0;
+		int positiveMessages = 0;
+		for(int i = 0; i < user.size(); i++) {
+			messages += user.get(i).getMessageCount();
+			positiveMessages += user.get(i).getPositiveCount();
+		}
+		positiveMessage = ((positiveMessages* 100) / messages);
+		return positiveMessage;
 	}
 
 }

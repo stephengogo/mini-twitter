@@ -164,8 +164,11 @@ public class UserViewUI implements Observer {
             			newsFeedDefaultListmodel.addElement(currentUser.getNewsFeed().get(i));
             		}
             	}
-            	//System.out.print(currentUser.getFollowers().get(0));
             	
+            	currentUser.addMessageCount();
+            	if(tweetTextArea.getText().contains("good") || tweetTextArea.getText().contains("great") || tweetTextArea.getText().contains("excellent")) {
+            		currentUser.addPositiveCount();
+            	}
             	
             	newsFeedListView.setModel(newsFeedDefaultListmodel);
             	tweetScrollPane.revalidate();

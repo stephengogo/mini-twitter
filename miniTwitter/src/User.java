@@ -3,21 +3,21 @@ import java.util.List;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class User extends Subject implements Group, UserElement  {
+public class User extends Subject implements Group {
 	private String uniqueID;
 	private List<String> followers;
 	private List<String> followings;
 	private List<String> newsFeed;
-	
-//	public User() {
-//		
-//	}
+	private int messageCount;
+	private int positiveCount;
 	
 	public User(String uniqueID) {
 		this.uniqueID = uniqueID;
 		this.followers = new ArrayList<String>();
 		this.followings = new ArrayList<String>();
 		this.newsFeed = new ArrayList<String>();
+		this.messageCount = 0;
+		this.positiveCount = 0;
 	}
 	
 	public String getUniqueID() {
@@ -52,7 +52,6 @@ public class User extends Subject implements Group, UserElement  {
 		this.followings.add(followings);
 	}
 
-
 	public void addNewsFeed(String news) {
 		this.newsFeed.add(news);
 	}
@@ -65,10 +64,30 @@ public class User extends Subject implements Group, UserElement  {
 		this.newsFeed = newsFeed;
 	}
 
-	public int getUserCount() {
-		return 1;
+	public void addMessageCount() {
+		this.messageCount++;
 	}
 	
+	public int getMessageCount() {
+		return messageCount;
+	}
+
+	public void setMessageCount(int messageCount) {
+		this.messageCount = messageCount;
+	}
+	
+	public void addPositiveCount() {
+		this.positiveCount++;
+	}
+	
+	public int getPositiveCount() {
+		return positiveCount;
+	}
+
+	public void setPositiveCount(int positiveCount) {
+		this.positiveCount = positiveCount;
+	}
+
 	// override Group interface method
 	@Override
 	public DefaultMutableTreeNode render() {
@@ -76,14 +95,5 @@ public class User extends Subject implements Group, UserElement  {
 		user.setUserObject(this.getUniqueID());
 		return user;
 	}
-
-	
-	@Override
-	public void accept(UserElementVisitor userElementVisitor) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-
 	
 }

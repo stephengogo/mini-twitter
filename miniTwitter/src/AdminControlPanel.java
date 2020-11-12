@@ -49,6 +49,7 @@ public class AdminControlPanel {
 	private HashMap<String, User> userHashMap;
 	private UserVisitor userVisitor;
 	private Integer groupSize;
+	private ArrayList<User> userList; 
 	
 	private void startView() {
         JPanel panel = new JPanel();
@@ -78,7 +79,8 @@ public class AdminControlPanel {
         userHashMap = new HashMap<String, User>();
         userVisitor = new UserVisitor();
         groupSize = 0;
-        		
+        userList = new ArrayList<User>();
+        
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(10,10,10,10);
         gbc.gridx = 1;
@@ -148,6 +150,7 @@ public class AdminControlPanel {
                 		root.add(newUser.render());
                 		containStringList.add(userIDTextArea.getText());
                 		userHashMap.put(userIDTextArea.getText(), newUser);
+                		userList.add(newUser);
                 	}
                 	else {
                 		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
@@ -156,6 +159,7 @@ public class AdminControlPanel {
                 			selectedElement.add(userNode);
                 			containStringList.add(userIDTextArea.getText());
                 			userHashMap.put(userIDTextArea.getText(), newUser);
+                			userList.add(newUser);
                 		} else {
                 			JOptionPane.showMessageDialog(frame,
                     			    "Group must be selected",
@@ -252,6 +256,10 @@ public class AdminControlPanel {
         this.showMessagesTotalButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
+            	JOptionPane.showMessageDialog(frame,
+            			userVisitor.visitMessagesTotal(userList) + " Message Total",
+        			    "MessageTotal",
+        			    JOptionPane.PLAIN_MESSAGE);
             	
             }
         });
@@ -259,7 +267,10 @@ public class AdminControlPanel {
         this.showPositivePercentageButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	
+            	JOptionPane.showMessageDialog(frame,
+            			userVisitor.visitPositivePercentage(userList) + "% Positive Messages",
+        			    "PositiveMessages",
+        			    JOptionPane.PLAIN_MESSAGE);
             }
         });
         

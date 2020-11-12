@@ -12,6 +12,7 @@ public class UserGroup implements Group {
 	public UserGroup() {
 		root = new DefaultMutableTreeNode("Root");
 	}
+	
 	public UserGroup(String groupID) {
 		this.groupID = groupID;
 	}
@@ -44,6 +45,7 @@ public class UserGroup implements Group {
 		this.userList = userList;
 	}
 
+	// to differentiate tree view added GROUP: groupname
 	@Override
 	public DefaultMutableTreeNode render() {
 		DefaultMutableTreeNode group = new DefaultMutableTreeNode("GROUP: " + this.groupID, true);

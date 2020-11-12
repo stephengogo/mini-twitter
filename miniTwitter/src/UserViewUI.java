@@ -56,20 +56,22 @@ public class UserViewUI implements Observer {
         panel.setLayout(new GridBagLayout());
         frame = new JFrame();
         
+        // follower ui section
         userTextArea = new JTextArea(2,17);
-        tweetTextArea = new JTextArea(2,17);
         followUserButton = new JButton("Follow User");
-        postTweetButton = new JButton("Post Tweet");
         currentFollowingListView = new JList(this.currentUser.getFollowers().toArray());
         followersScrollPane = new JScrollPane();
         followersScrollPane.setViewportView(currentFollowingListView);
-        
         followingDefaultListmodel = new DefaultListModel<String>();
+        
+        // tweet ui section
+        tweetTextArea = new JTextArea(2,17);
+        postTweetButton = new JButton("Post Tweet");
+        newsFeedListView = new JList(this.currentUser.getNewsFeed().toArray());
+        tweetScrollPane = new JScrollPane();
+        tweetScrollPane.setViewportView(newsFeedListView);
         newsFeedDefaultListmodel = new DefaultListModel<String>();
         
-        newsFeedListView = new JList(this.currentUser.getNewsFeed().toArray());
-        tweetScrollPane = new JScrollPane(newsFeedListView);
-        //tweetScrollPane.setViewportView(newsFeedListView);
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -123,8 +125,6 @@ public class UserViewUI implements Observer {
             		}
             		
             		currentFollowingListView.setModel(followingDefaultListmodel);
-            		
-            		
             		followersScrollPane.revalidate();
             		followersScrollPane.repaint();
                 } else {
@@ -137,11 +137,20 @@ public class UserViewUI implements Observer {
             }
         });
 		
+		// listen for post tweet button and add message to user and followers 
 		this.postTweetButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	
-            	System.out.println(tweetTextArea.getText());
+            	currentUser.addNewsFeed(currentUser.getUniqueID() + ": " + tweetTextArea.getText());
+            	for(int i = 0; i < currentUser.getNewsFeed().size(); i++) {
+            		if(!newsFeedDefaultListmodel.contains(currentUser.getNewsFeed().get(i))) {
+            			newsFeedDefaultListmodel.addElement(currentUser.getNewsFeed().get(i));
+            		}
+            	}
+            	newsFeedListView.setModel(newsFeedDefaultListmodel);
+            	tweetScrollPane.revalidate();
+            	tweetScrollPane.repaint();
+            	tweetTextArea.setText("");
             }
         });
 	}

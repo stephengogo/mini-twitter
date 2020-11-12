@@ -20,11 +20,9 @@ public class User extends Subject implements Group {
 		return uniqueID;
 	}
 
-
 	public void setUniqueID(String uniqueID) {
 		this.uniqueID = uniqueID;
 	}
-
 
 	public List<String> getFollowers() {
 		return followers;
@@ -35,11 +33,9 @@ public class User extends Subject implements Group {
 		this.followers = followers;
 	}
 
-
 	public List<String> getFollowings() {
 		return followings;
 	}
-
 
 	public void setFollowings(List<String> followings) {
 		this.followings = followings;
@@ -49,17 +45,19 @@ public class User extends Subject implements Group {
 		this.followers.add(follower);
 	}
 
-
+	public void addNewsFeed(String news) {
+		this.newsFeed.add(news);
+	}
+	
 	public List<String> getNewsFeed() {
 		return newsFeed;
 	}
-
 
 	public void setNewsFeed(List<String> newsFeed) {
 		this.newsFeed = newsFeed;
 	}
 
-
+	// override Group interface method
 	@Override
 	public DefaultMutableTreeNode render() {
 		DefaultMutableTreeNode user = new DefaultMutableTreeNode(this, false);

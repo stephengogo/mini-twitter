@@ -18,11 +18,9 @@ public class GUI implements ActionListener {
 	private JTextArea groupIDTextArea;
 	private GridBagLayout layout;
 	private GridBagConstraints gbc;
-	
 	private DefaultMutableTreeNode root; 
 	private JTree tree;
 	
-
     public GUI() {
 
     	JPanel panel = new JPanel();

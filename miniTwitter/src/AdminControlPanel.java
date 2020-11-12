@@ -1,4 +1,3 @@
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -26,7 +25,6 @@ public class AdminControlPanel {
 		}
 		return instance;
 	}
-
     
 	private AdminControlPanel() {
 		startView();
@@ -132,7 +130,6 @@ public class AdminControlPanel {
         
         frame.add(mainPanel);
         frame.setSize(900, 300);
-        //frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Admin Panel");
         
@@ -144,13 +141,12 @@ public class AdminControlPanel {
 		this.addUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
+            	// check if unique user ID, add user to respective default mutable tree node, else throw error message 
             	if(!containStringList.contains(userIDTextArea.getText()) && (userIDTextArea.getText().length() != 0) ) {
             		User newUser = new User(userIDTextArea.getText());
             		
-            		
                 	if(jTree.getSelectionPath() == null) {
                 		root.add(newUser.render());
-                		//UserViewUI newUserUI = new UserViewUI(newUser, false);
                 		containStringList.add(userIDTextArea.getText());
                 		userHashMap.put(userIDTextArea.getText(), newUser);
                 	}
@@ -159,7 +155,6 @@ public class AdminControlPanel {
                 		if(selectedElement.getAllowsChildren()) {
                 			DefaultMutableTreeNode userNode = newUser.render();
                 			selectedElement.add(userNode);
-                			//UserViewUI newUserUI = new UserViewUI(newUser, false);
                 			containStringList.add(userIDTextArea.getText());
                 			userHashMap.put(userIDTextArea.getText(), newUser);
                 		} else {
@@ -184,6 +179,7 @@ public class AdminControlPanel {
             }
         });
 		
+		// add group if none is selected to root then only add when a group is selected, else throw error message 
         this.addGroupButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
@@ -217,19 +213,14 @@ public class AdminControlPanel {
             }
         });
         
+        // check if the selected is a user then open user view
         this.openUserViewButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	// selected element is of type string and not user
             	DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
             	if(!selectedElement.getAllowsChildren()) {
-            		
-            		System.out.println(selectedElement);
-            		System.out.println(userHashMap.containsKey(selectedElement.toString()));
             		UserViewUI test = new UserViewUI(userHashMap.get(selectedElement.toString()));
             		test.setContainStringList(containStringList);
-            		System.out.println("test");
-                	//UserViewUI test = new UserViewUI();
         		}
             }
         });

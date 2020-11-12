@@ -4,7 +4,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -12,8 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.tree.DefaultMutableTreeNode;
-
 
 public class UserViewUI implements Observer {
 
@@ -30,12 +29,9 @@ public class UserViewUI implements Observer {
 	private JList currentFollowingListView;
 	private JList newsFeedListView;
 	
+	private DefaultListModel<String> followingDefaultListmodel;
+	private DefaultListModel<String> newsFeedDefaultListmodel;
 	private ArrayList<String> containStringList;
-	
-//	public UserViewUI() {
-//		initUI();
-//		listeners();
-//	}
 	
 	public ArrayList<String> getContainStringList() {
 		return containStringList;
@@ -45,6 +41,7 @@ public class UserViewUI implements Observer {
 		this.containStringList = containStringList;
 	}
 
+	// constructor
 	public UserViewUI(User user) {
 		currentUser = user;
 		initUI();
@@ -52,6 +49,7 @@ public class UserViewUI implements Observer {
 		
 	}
 	
+	// set up user ui
 	@SuppressWarnings("unchecked")
 	private void initUI() {
 		JPanel panel = new JPanel();
@@ -65,6 +63,9 @@ public class UserViewUI implements Observer {
         currentFollowingListView = new JList(this.currentUser.getFollowers().toArray());
         followersScrollPane = new JScrollPane();
         followersScrollPane.setViewportView(currentFollowingListView);
+        
+        followingDefaultListmodel = new DefaultListModel<String>();
+        newsFeedDefaultListmodel = new DefaultListModel<String>();
         
         newsFeedListView = new JList(this.currentUser.getNewsFeed().toArray());
         tweetScrollPane = new JScrollPane(newsFeedListView);
@@ -83,7 +84,6 @@ public class UserViewUI implements Observer {
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.gridwidth = 2;
-        //followersScrollPane.setPreferredSize();
         panel.add(followersScrollPane, gbc);
         
         gbc.gridwidth = 1;
@@ -107,35 +107,47 @@ public class UserViewUI implements Observer {
         frame.setVisible(true);
 	}
 	
+	// listen for button click
 	private void listeners() {
 		this.followUserButton.addActionListener(new ActionListener() {  
             @Override      
             public void actionPerformed(ActionEvent e) {
-            	System.out.print(containStringList.get(0));
-            	if(containStringList.contains(userTextArea.getText())) {
+            	// check if the user inside text is valid if it is add the user else error message 
+            	if(containStringList.contains(userTextArea.getText()) && !followingDefaultListmodel.contains(userTextArea.getText()) ) {
             		currentUser.addFollowers(userTextArea.getText());
-            		DefaultListModel<String> model = new DefaultListModel<String>();
+            		
             		for(int i = 0; i < currentUser.getFollowers().size(); i++) {
-            			model.addElement(currentUser.getFollowers().get(i));
-            			System.out.print(currentUser.getFollowers().get(i));
+            			if(!followingDefaultListmodel.contains(currentUser.getFollowers().get(i))) {
+            				followingDefaultListmodel.addElement(currentUser.getFollowers().get(i));
+            			}
             		}
-            		//model.addElement(userTextArea.getText());
-            		currentFollowingListView.setModel(model);
-            		userTextArea.setText("");
+            		
+            		currentFollowingListView.setModel(followingDefaultListmodel);
+            		
             		
             		followersScrollPane.revalidate();
             		followersScrollPane.repaint();
-            		
-            		//frame.revalidate();
-                    //frame.repaint();
+                } else {
+                	JOptionPane.showMessageDialog(frame,
+            			    "Invalid User: Can't follow same user or Null.",
+            			    "Error message",
+            			    JOptionPane.PLAIN_MESSAGE);
                 }
+            	userTextArea.setText("");
+            }
+        });
+		
+		this.postTweetButton.addActionListener(new ActionListener() {  
+            @Override      
+            public void actionPerformed(ActionEvent e) {
+            	
+            	System.out.println(tweetTextArea.getText());
             }
         });
 	}
 
 	@Override
 	public void update(Subject subject) {
-		// TODO Auto-generated method stub
-		followersScrollPane.repaint();
+		subject.attach(this);
 	}
 }

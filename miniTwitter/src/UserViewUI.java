@@ -4,6 +4,8 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -32,6 +34,7 @@ public class UserViewUI implements Observer {
 	private DefaultListModel<String> followingDefaultListmodel;
 	private DefaultListModel<String> newsFeedDefaultListmodel;
 	private ArrayList<String> containStringList;
+	private HashMap<String, User> userMap;
 	
 	public ArrayList<String> getContainStringList() {
 		return containStringList;
@@ -39,6 +42,14 @@ public class UserViewUI implements Observer {
 
 	public void setContainStringList(ArrayList<String> containStringList) {
 		this.containStringList = containStringList;
+	}
+	
+	public HashMap<String, User> getUserMap() {
+		return userMap;
+	}
+
+	public void setUserMap(HashMap<String, User> userMap) {
+		this.userMap = userMap;
 	}
 
 	// constructor
@@ -48,7 +59,7 @@ public class UserViewUI implements Observer {
 		listeners();
 		
 	}
-	
+
 	// set up user ui
 	@SuppressWarnings("unchecked")
 	private void initUI() {
@@ -59,7 +70,7 @@ public class UserViewUI implements Observer {
         // follower ui section
         userTextArea = new JTextArea(2,17);
         followUserButton = new JButton("Follow User");
-        currentFollowingListView = new JList(this.currentUser.getFollowers().toArray());
+        currentFollowingListView = new JList(this.currentUser.getFollowings().toArray());
         followersScrollPane = new JScrollPane();
         followersScrollPane.setViewportView(currentFollowingListView);
         followingDefaultListmodel = new DefaultListModel<String>();
@@ -116,13 +127,14 @@ public class UserViewUI implements Observer {
             public void actionPerformed(ActionEvent e) {
             	// check if the user inside text is valid if it is add the user else error message 
             	if(containStringList.contains(userTextArea.getText()) && !followingDefaultListmodel.contains(userTextArea.getText()) ) {
-            		currentUser.addFollowers(userTextArea.getText());
+            		currentUser.addFollowings(userTextArea.getText());
             		
-            		for(int i = 0; i < currentUser.getFollowers().size(); i++) {
-            			if(!followingDefaultListmodel.contains(currentUser.getFollowers().get(i))) {
-            				followingDefaultListmodel.addElement(currentUser.getFollowers().get(i));
+            		for(int i = 0; i < currentUser.getFollowings().size(); i++) {
+            			if(!followingDefaultListmodel.contains(currentUser.getFollowings().get(i))) {
+            				followingDefaultListmodel.addElement(currentUser.getFollowings().get(i));
             			}
             		}
+            		userMap.get(userTextArea.getText()).addFollowers(currentUser.getUniqueID());
             		
             		currentFollowingListView.setModel(followingDefaultListmodel);
             		followersScrollPane.revalidate();
@@ -142,11 +154,19 @@ public class UserViewUI implements Observer {
             @Override      
             public void actionPerformed(ActionEvent e) {
             	currentUser.addNewsFeed(currentUser.getUniqueID() + ": " + tweetTextArea.getText());
+            	
+            	for(int i = 0; i < currentUser.getFollowers().size(); i++ ) {
+            		userMap.get(currentUser.getFollowers().get(i)).addNewsFeed(currentUser.getUniqueID() + ": " + tweetTextArea.getText());
+            	}
+            	
             	for(int i = 0; i < currentUser.getNewsFeed().size(); i++) {
             		if(!newsFeedDefaultListmodel.contains(currentUser.getNewsFeed().get(i))) {
             			newsFeedDefaultListmodel.addElement(currentUser.getNewsFeed().get(i));
             		}
             	}
+            	//System.out.print(currentUser.getFollowers().get(0));
+            	
+            	
             	newsFeedListView.setModel(newsFeedDefaultListmodel);
             	tweetScrollPane.revalidate();
             	tweetScrollPane.repaint();

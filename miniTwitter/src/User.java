@@ -9,9 +9,10 @@ public class User extends Subject implements Group, UserElement  {
 	private List<String> followings;
 	private List<String> newsFeed;
 	
-	public User() {
-		
-	}
+//	public User() {
+//		
+//	}
+	
 	public User(String uniqueID) {
 		this.uniqueID = uniqueID;
 		this.followers = new ArrayList<String>();
@@ -31,9 +32,12 @@ public class User extends Subject implements Group, UserElement  {
 		return followers;
 	}
 
-
 	public void setFollowers(List<String> followers) {
 		this.followers = followers;
+	}
+	
+	public void addFollowers(String follower) {
+		this.followers.add(follower);
 	}
 
 	public List<String> getFollowings() {
@@ -44,9 +48,10 @@ public class User extends Subject implements Group, UserElement  {
 		this.followings = followings;
 	}
 	
-	public void addFollowers(String follower) {
-		this.followers.add(follower);
+	public void addFollowings(String followings) {
+		this.followings.add(followings);
 	}
+
 
 	public void addNewsFeed(String news) {
 		this.newsFeed.add(news);
@@ -72,7 +77,6 @@ public class User extends Subject implements Group, UserElement  {
 		return user;
 	}
 
-	
 	
 	@Override
 	public void accept(UserElementVisitor userElementVisitor) {

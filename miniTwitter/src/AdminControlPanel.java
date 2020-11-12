@@ -220,8 +220,9 @@ public class AdminControlPanel {
             public void actionPerformed(ActionEvent e) {
             	DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
             	if(!selectedElement.getAllowsChildren()) {
-            		UserViewUI test = new UserViewUI(userHashMap.get(selectedElement.toString()));
-            		test.setContainStringList(containStringList);
+            		UserViewUI userview = new UserViewUI(userHashMap.get(selectedElement.toString()));
+            		userview.setContainStringList(containStringList);
+            		userview.setUserMap(userHashMap);
         		}
             }
         });

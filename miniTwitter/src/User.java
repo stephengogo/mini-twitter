@@ -10,6 +10,7 @@ public class User extends Subject implements Group {
 	private List<String> newsFeed;
 	private int messageCount;
 	private int positiveCount;
+	private long creationTime;
 	
 	public User(String uniqueID) {
 		this.uniqueID = uniqueID;
@@ -18,6 +19,7 @@ public class User extends Subject implements Group {
 		this.newsFeed = new ArrayList<String>();
 		this.messageCount = 0;
 		this.positiveCount = 0;
+		this.creationTime = System.currentTimeMillis();
 	}
 	
 	public String getUniqueID() {
@@ -86,6 +88,14 @@ public class User extends Subject implements Group {
 
 	public void setPositiveCount(int positiveCount) {
 		this.positiveCount = positiveCount;
+	}
+	
+	public long getCreationTime() {
+		return creationTime;
+	}
+
+	public void setCreationTime(long creationTime) {
+		this.creationTime = creationTime;
 	}
 
 	// override Group interface method

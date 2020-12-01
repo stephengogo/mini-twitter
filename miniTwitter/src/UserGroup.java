@@ -8,6 +8,7 @@ public class UserGroup implements Group {
 	private String groupID;
 	private List<User> userList = new ArrayList<User>();
 	private static DefaultMutableTreeNode root;
+	private long creationTime;
 	
 	public UserGroup() {
 		root = new DefaultMutableTreeNode("Root");
@@ -33,6 +34,14 @@ public class UserGroup implements Group {
 		return groupID;
 	}
 
+	public long getCreationTime() {
+		return creationTime;
+	}
+
+	public void setCreationTime(long creationTime) {
+		this.creationTime = creationTime;
+	}
+
 	public void setGroupID(String groupID) {
 		this.groupID = groupID;
 	}
@@ -49,6 +58,7 @@ public class UserGroup implements Group {
 	@Override
 	public DefaultMutableTreeNode render() {
 		DefaultMutableTreeNode group = new DefaultMutableTreeNode("GROUP: " + this.groupID, true);
+		this.creationTime = System.currentTimeMillis();
 		return group;
 	}
 

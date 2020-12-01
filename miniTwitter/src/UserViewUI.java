@@ -9,6 +9,7 @@ import java.util.HashMap;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -30,6 +31,7 @@ public class UserViewUI implements Observer {
 	private User currentUser;
 	private JList currentFollowingListView;
 	private JList newsFeedListView;
+	private JLabel creationTimeText;
 	
 	private DefaultListModel<String> followingDefaultListmodel;
 	private DefaultListModel<String> newsFeedDefaultListmodel;
@@ -83,6 +85,8 @@ public class UserViewUI implements Observer {
         tweetScrollPane.setViewportView(newsFeedListView);
         newsFeedDefaultListmodel = new DefaultListModel<String>();
         
+        creationTimeText = new JLabel("Created Time in Current millis: " + currentUser.getCreationTime());
+        
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -112,6 +116,11 @@ public class UserViewUI implements Observer {
         gbc.gridy = 3;
         gbc.gridwidth = 2;
         panel.add(tweetScrollPane, gbc);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        panel.add(creationTimeText, gbc);
         
         frame.add(panel);
         frame.setSize(500, 500);

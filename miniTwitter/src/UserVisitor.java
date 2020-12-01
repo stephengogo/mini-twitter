@@ -76,6 +76,21 @@ public class UserVisitor implements UserElementVisitor {
 		}
 		return true;
 	}
+
+	@Override
+	public String visitLastUpdatedUser(ArrayList<User> user) {
+		String returnString = "No users";
+		if(!user.isEmpty()) {
+			long maxTime = user.get(0).getLastUpdateTime();
+			for(int i = 0; i < user.size(); i++) {
+				if(user.get(i).getLastUpdateTime() >= maxTime) {
+					maxTime = user.get(i).getLastUpdateTime();
+					returnString = user.get(i).getUniqueID();
+				}
+			}
+		}
+		return returnString;
+	}
 	
 
 }

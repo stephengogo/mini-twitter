@@ -7,4 +7,5 @@ public interface UserElementVisitor {
 	public int visitMessagesTotal(ArrayList<User> user);
 	public double visitPositivePercentage(ArrayList<User> user);
 	public boolean visitUserGroupValidation(ArrayList<String> user, ArrayList<String> group);
+	public String visitLastUpdatedUser(ArrayList<User> user);
 }

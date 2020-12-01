@@ -38,6 +38,7 @@ public class AdminControlPanel {
 	private JButton showMessagesTotalButton;
 	private JButton showPositivePercentageButton;
 	private JButton userAndGroupIDverificationButton;
+	private JButton findLastUpdatedUserButton;
 	private JTextArea userIDTextArea;
 	private JTextArea groupIDTextArea;
 	private GridBagLayout layout;
@@ -77,6 +78,7 @@ public class AdminControlPanel {
         showMessagesTotalButton = new JButton("Show Messages Total");
         showPositivePercentageButton = new JButton("Show Positive Percentage");
         userAndGroupIDverificationButton = new JButton("Verify User/Group ID");
+        findLastUpdatedUserButton = new JButton("Last Updated User");
         
         containStringList = new ArrayList<String>();
         groupStringArrList = new ArrayList<String>();
@@ -133,6 +135,11 @@ public class AdminControlPanel {
         gbc.gridy = 5;
         gbc.gridwidth = 1;
         panel.add(userAndGroupIDverificationButton, gbc);
+        
+        gbc.gridx = 2;
+        gbc.gridy = 5;
+        gbc.gridwidth = 1;
+        panel.add(findLastUpdatedUserButton, gbc);
         
         JPanel mainPanel = new JPanel(new GridLayout(0,2));
         JScrollPane jScrollTreePane = new JScrollPane(jTree);
@@ -292,6 +299,17 @@ public class AdminControlPanel {
             	JOptionPane.showMessageDialog(frame,
             			"All User and Group Valid: " + userVisitor.visitUserGroupValidation(containStringList, groupStringArrList),
         			    "Verification",
+        			    JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+        
+        // find the user with the highest lastUpdateTime
+        this.findLastUpdatedUserButton.addActionListener(new ActionListener() {  
+            @Override      
+            public void actionPerformed(ActionEvent e) {
+            	JOptionPane.showMessageDialog(frame,
+            			"Last Updated User: " + userVisitor.visitLastUpdatedUser(userList),
+        			    "Last User Update",
         			    JOptionPane.PLAIN_MESSAGE);
             }
         });

@@ -37,6 +37,7 @@ public class AdminControlPanel {
 	private JButton showGroupTotalButton;
 	private JButton showMessagesTotalButton;
 	private JButton showPositivePercentageButton;
+	private JButton userAndGroupIDverificationButton;
 	private JTextArea userIDTextArea;
 	private JTextArea groupIDTextArea;
 	private GridBagLayout layout;
@@ -46,6 +47,7 @@ public class AdminControlPanel {
 	private DefaultTreeModel defaultTreeModel;
 	private JTree jTree;
 	private ArrayList<String> containStringList;
+	private ArrayList<String> groupStringArrList;
 	private HashMap<String, User> userHashMap;
 	private UserVisitor userVisitor;
 	private Integer groupSize;
@@ -74,8 +76,10 @@ public class AdminControlPanel {
         showGroupTotalButton = new JButton("Show GroupTotal");
         showMessagesTotalButton = new JButton("Show Messages Total");
         showPositivePercentageButton = new JButton("Show Positive Percentage");
+        userAndGroupIDverificationButton = new JButton("Verify User/Group ID");
         
         containStringList = new ArrayList<String>();
+        groupStringArrList = new ArrayList<String>();
         userHashMap = new HashMap<String, User>();
         userVisitor = new UserVisitor();
         groupSize = 0;
@@ -125,13 +129,18 @@ public class AdminControlPanel {
         gbc.gridwidth = 1;
         panel.add(showPositivePercentageButton, gbc);
         
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.gridwidth = 1;
+        panel.add(userAndGroupIDverificationButton, gbc);
+        
         JPanel mainPanel = new JPanel(new GridLayout(0,2));
         JScrollPane jScrollTreePane = new JScrollPane(jTree);
         mainPanel.add(jScrollTreePane);
         mainPanel.add(panel);
         
         frame.add(mainPanel);
-        frame.setSize(900, 300);
+        frame.pack();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Admin Panel");
         frame.setVisible(true);
@@ -192,6 +201,7 @@ public class AdminControlPanel {
                     	DefaultMutableTreeNode newestGroup = rootGroup.render();
                 		root.add(newestGroup);
                 		groupSize++;
+                		groupStringArrList.add(groupIDTextArea.getText());
                 	}
                     else {
                 		DefaultMutableTreeNode selectedElement = (DefaultMutableTreeNode) jTree.getSelectionPath().getLastPathComponent();
@@ -200,6 +210,7 @@ public class AdminControlPanel {
                 			DefaultMutableTreeNode newestGroup = rootGroup.render();
                 			selectedElement.add(newestGroup);
                 			groupSize++;
+                			groupStringArrList.add(groupIDTextArea.getText());
                 		}
                 	}
             	} else {
@@ -270,6 +281,17 @@ public class AdminControlPanel {
             	JOptionPane.showMessageDialog(frame,
             			userVisitor.visitPositivePercentage(userList) + "% Positive Messages",
         			    "PositiveMessages",
+        			    JOptionPane.PLAIN_MESSAGE);
+            }
+        });
+        
+        // Test is user and groupID name is unique and has no spaces 
+        this.userAndGroupIDverificationButton.addActionListener(new ActionListener() {  
+            @Override      
+            public void actionPerformed(ActionEvent e) {
+            	JOptionPane.showMessageDialog(frame,
+            			"All User and Group Valid: " + userVisitor.visitUserGroupValidation(containStringList, groupStringArrList),
+        			    "Verification",
         			    JOptionPane.PLAIN_MESSAGE);
             }
         });

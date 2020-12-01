@@ -32,6 +32,7 @@ public class UserViewUI implements Observer {
 	private JList currentFollowingListView;
 	private JList newsFeedListView;
 	private JLabel creationTimeText;
+	private JLabel lastUpdateTimeText;
 	
 	private DefaultListModel<String> followingDefaultListmodel;
 	private DefaultListModel<String> newsFeedDefaultListmodel;
@@ -86,6 +87,7 @@ public class UserViewUI implements Observer {
         newsFeedDefaultListmodel = new DefaultListModel<String>();
         
         creationTimeText = new JLabel("Created Time in Current millis: " + currentUser.getCreationTime());
+        lastUpdateTimeText = new JLabel("Last Update Time in Current millis: " + currentUser.getLastUpdateTime());
         
         gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -121,6 +123,11 @@ public class UserViewUI implements Observer {
         gbc.gridy = 4;
         gbc.gridwidth = 2;
         panel.add(creationTimeText, gbc);
+        
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.gridwidth = 2;
+        panel.add(lastUpdateTimeText, gbc);
         
         frame.add(panel);
         frame.setSize(500, 500);
@@ -163,9 +170,12 @@ public class UserViewUI implements Observer {
             @Override      
             public void actionPerformed(ActionEvent e) {
             	currentUser.addNewsFeed(currentUser.getUniqueID() + ": " + tweetTextArea.getText());
+            	long tempTime = System.currentTimeMillis();
+            	currentUser.setLastUpdateTime(tempTime);
             	
             	for(int i = 0; i < currentUser.getFollowers().size(); i++ ) {
             		userMap.get(currentUser.getFollowers().get(i)).addNewsFeed(currentUser.getUniqueID() + ": " + tweetTextArea.getText());
+            		userMap.get(currentUser.getFollowers().get(i)).setLastUpdateTime(tempTime);
             	}
             	
             	for(int i = 0; i < currentUser.getNewsFeed().size(); i++) {
@@ -178,7 +188,7 @@ public class UserViewUI implements Observer {
             	if(tweetTextArea.getText().contains("good") || tweetTextArea.getText().contains("great") || tweetTextArea.getText().contains("excellent")) {
             		currentUser.addPositiveCount();
             	}
-            	
+            	lastUpdateTimeText.setText("Last Update Time in Current millis: " + currentUser.getLastUpdateTime());
             	newsFeedListView.setModel(newsFeedDefaultListmodel);
             	tweetScrollPane.revalidate();
             	tweetScrollPane.repaint();

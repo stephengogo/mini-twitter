@@ -11,6 +11,7 @@ public class User extends Subject implements Group {
 	private int messageCount;
 	private int positiveCount;
 	private long creationTime;
+	private long lastUpdateTime;
 	
 	public User(String uniqueID) {
 		this.uniqueID = uniqueID;
@@ -20,6 +21,7 @@ public class User extends Subject implements Group {
 		this.messageCount = 0;
 		this.positiveCount = 0;
 		this.creationTime = System.currentTimeMillis();
+		this.lastUpdateTime = System.currentTimeMillis();
 	}
 	
 	public String getUniqueID() {
@@ -96,6 +98,14 @@ public class User extends Subject implements Group {
 
 	public void setCreationTime(long creationTime) {
 		this.creationTime = creationTime;
+	}
+	
+	public long getLastUpdateTime() {
+		return lastUpdateTime;
+	}
+
+	public void setLastUpdateTime(long lastUpdateTime) {
+		this.lastUpdateTime = lastUpdateTime;
 	}
 
 	// override Group interface method
